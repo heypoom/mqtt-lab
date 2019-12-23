@@ -1,0 +1,11 @@
+{
+  "name": "mqtt-lab",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "mosca": "^2.8.3",
+    "mqtt": "^3.0.0",
+    "redis": "^2.8.0"
+  }
+}
