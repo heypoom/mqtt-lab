@@ -2,11 +2,14 @@ const mqtt = require('mqtt')
 const client = mqtt.connect('mqtt://localhost:1883')
  
 client.on('connect', () => {
-  client.subscribe('presence', err => {
-    if (err) return
+	client.publish('presence', 'online')
 
-		client.publish('presence', 'online')
-  })
+	const payload = JSON.stringify({
+		humidity: Math.floor(Math.random() * 70),
+		temperature: Math.floor(Math.random() * 40)
+	})
+
+	client.publish('sensors/farm/1', payload)
 })
  
 client.on('message', (topic, message) => {

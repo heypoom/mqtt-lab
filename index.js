@@ -1,4 +1,15 @@
 const mosca = require('mosca')
+const mongoose = require('mongoose')
+
+mongoose.connect('mongodb://localhost:27017/iot', {
+	useNewUrlParser: true
+})
+
+const Record = mongoose.model('Record', {
+	time: Date,
+	temperature: Number,
+	humidity: Number
+});
 
 const settings = {
   port: 1883,
@@ -23,6 +34,21 @@ server.on('published', (packet, client) => {
 
 	if (packet.topic === 'presence') {
 		console.log('SET CLIENT TO', packet.payload.toString())
+	}
+
+	if (packet.topic === 'sensors/farm/1') {
+		const text = packet.payload.toString()
+		if (!text) return
+
+		const {temperature, humidity} = JSON.parse(text)
+
+		const record = new Record({
+			time: Date.now(),
+			temperature,
+			humidity
+		})
+
+		record.save().then(() => console.log('data saved to DB'))
 	}
 })
 
